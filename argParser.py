@@ -1,5 +1,13 @@
+from datetime import datetime
 from datetime import date
 import argparse
+
+def validDate(s):
+    try:
+        return datetime.strptime(s, "%d-%m-%Y")
+    except ValueError:
+        msg = "ERROR, not a valid date: {0!r}".format(s)
+        raise argparse.ArgumentTypeError(msg)
 
 parser = argparse.ArgumentParser()
 
@@ -14,6 +22,7 @@ parser.add_argument('-n',
 parser.add_argument('-d',
                     '--dob',
                     required=True,
+                    type=validDate,
                     help='input your date of birth (DD-MM-YYYY)'
 )
 
@@ -21,9 +30,9 @@ parser.add_argument('-d',
 args = parser.parse_args()
 
 # Get each date, month, and year from the argument
-d = int(args.dob[:2])
-m = int(args.dob[3:5])
-y = int(args.dob[-4:])
+d = args.dob.date
+m = args.dob.month
+y = args.dob.year
 
 # Get today date, month, and year
 today = date.today()
